@@ -61,6 +61,7 @@ void NTBoled::clear() {
  */
 void NTBoled::print(String message, int size, int x, int y) {
   if (!_initialized) return;
+  _display.setTextColor(WHITE);
   _display.setTextSize(size);
   _display.setCursor(x, y);
   _display.print(message);
