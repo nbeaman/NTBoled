@@ -7,7 +7,7 @@ void setup() {
 
   if (!oled.begin()) {
     Serial.println(F("Failed to start OLED"));
-    while (true);
+    //while (true);   Don't do this, it will lockup the code.
   }
 
   // 1. Clear the screen buffer
