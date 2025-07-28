@@ -1,34 +1,27 @@
-#ifndef NTBoled_h
-#define NTBoled_h
+#ifndef NT_BOLED_H
+#define NT_BOLED_H
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
 class NTBoled {
   public:
-    NTBoled(); 
+    NTBoled();
     bool begin();
-    void clear();
-    void print(String message, int size, int x, int y);
-    
-    void drawWifiSymbol(bool connected);
-    void drawNoWifiSymbol();
-    
-    bool isI2CFunctioning();
-    bool isI2CDevicePresent(uint8_t address);
-    	
-    /**
-     * @brief Draws a battery-style charge bar in the top-right corner.
-     * * @param percentage The charge level to display, from 0 to 100.
-     */
-    void drawChargeBar(int percentage);
-
-    void show();
+    bool clear();
+    bool print(const char* message, int size, int x, int y);
+    bool print(int value, int size, int x, int y); // Overload for integers
+    bool drawChargeBar(int percentage);
+    bool drawWifiSymbol(bool connected);
+    bool drawNoWifiSymbol();
+    bool show();
 
   private:
     Adafruit_SSD1306 _display;
-		bool _initialized; 							// Track whether OLED is available	
+    bool _initialized = false;
+    bool isI2CDevicePresent(uint8_t address);
+    bool isI2CFunctioning();
 };
 
-#endif
+#endif // NT_BOLED_H
