@@ -13,13 +13,13 @@
 NTBoled::NTBoled() : _display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET) {
 }
 
+//====== test function to determine if OLED is connected to the board -------
 bool NTBoled::isI2CDevicePresent(uint8_t address) {
   Wire.beginTransmission(address);
   return Wire.endTransmission() == 0;
 }
 
 bool NTBoled::isI2CFunctioning(){
-	
   if (!_display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
 		Serial.println(String("nope"));
     return false;
@@ -27,13 +27,14 @@ bool NTBoled::isI2CFunctioning(){
   	Serial.println(String("yes"));
   	return true;
 	}	
-	
 }
-	
+//--------------------------------------------------------------------------	
 /*
  * begin()
  */
 bool NTBoled::begin() {
+	//------ Test to see if OLED is attached to device------------------
+	// set _initialized to false if not
 	Wire.begin(); // Default SDA = GPIO21, SCL = GPIO22
 	if(isI2CDevicePresent(SCREEN_ADDRESS)){
 		isI2CFunctioning();
@@ -45,7 +46,7 @@ bool NTBoled::begin() {
 		_initialized = false;
 		return false;
 	}
-	
+	//-----------------------------------------------------------------
 }
 
 /*
@@ -67,6 +68,7 @@ void NTBoled::print(String message, int size, int x, int y) {
   _display.print(message);
 }
 
+//-------- Draws a Wi-Fi symbol in upper left of screen
 void NTBoled::drawWifiSymbol(bool connected) {
   if (!_initialized) return;
   _display.fillRect(0, 0, 16, 16, SSD1306_BLACK);
@@ -82,6 +84,7 @@ void NTBoled::drawWifiSymbol(bool connected) {
   }
 }
 
+//-------- Draws a "X" symbol in upper left of screen (No Wi-Fi)
 void NTBoled::drawNoWifiSymbol() {
   if (!_initialized) return;
 
