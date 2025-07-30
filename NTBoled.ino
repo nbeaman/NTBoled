@@ -2,58 +2,46 @@
 
 NTBoled oled;
 
-unsigned long lastUpdate = 0;
-int batteryLevel = 0;
-bool increasing = true;
-const int UPDATE_INTERVAL = 25; // ms between updates
-
 void setup() {
   Serial.begin(115200);
+
   if (!oled.begin()) {
     Serial.println(F("Failed to start OLED"));
+    while (true);
   }
+
+  // 1. Clear the screen buffer
   oled.clear();
   oled.show();
 }
 
 void loop() {
-  unsigned long currentTime = millis();
-  
-  // Only update when interval has passed
-  if (currentTime - lastUpdate >= UPDATE_INTERVAL) {
-    lastUpdate = currentTime;
+  // The screen will continue to show the text from setup()
+  // until it is cleared and updated again.
+  // Animate the bar filling up
+  for (int i = 0; i <= 100; i++) {
+    oled.clear(); // Clear previous content
+        oled.drawWifiSymbol(true);
+    oled.drawChargeBar(i); // Draw the bar with the current percentage
+ 
+    // Print the percentage value on screen
+    oled.print(String(i) + "%", 2, 35, 20);
     
-    // Update battery level
-    if (increasing) {
-      batteryLevel++;
-      if (batteryLevel >= 100) {
-        batteryLevel = 100;
-        increasing = false;
-        // Pause at full charge
-        lastUpdate += 1000;
-      }
-    } else {
-      batteryLevel--;
-      if (batteryLevel <= 0) {
-        batteryLevel = 0;
-        increasing = true;
-        // Pause at empty
-        lastUpdate += 1000;
-        Serial.print(F("ok "));
-      }
-    }
-    
-    // Update display
-    oled.clear();
-    oled.drawChargeBar(batteryLevel);
-    oled.drawWifiSymbol(true);
-    
-    char buffer[10];
-    sprintf(buffer, "%d%%", batteryLevel);
-    oled.print(buffer, 2, 35, 20);
-    
-    oled.show();
+    oled.show(); // Update the display
+    delay(25);
   }
-  
-  // Your other code can run here without being blocked
+
+  delay(1000);
+
+  // Animate the bar draining
+  for (int i = 100; i >= 0; i--) {
+    oled.clear();
+    oled.drawChargeBar(i);
+    oled.drawWifiSymbol(true); 
+    oled.print(String(i) + "%", 2, 35, 20);
+    oled.show();
+    delay(25);
+  }
+
+  delay(1000);  
 }
