@@ -22,6 +22,7 @@ class NTBoled {
     void drawNoWifiSymbol();
     void drawChargeBar(int percentage); // Based on sketch usage
     void show(); // Based on sketch usage
+    void drawMessageBlock(int xt, int yt, int xb, int yb, const String& msg);
     
   private:
     Adafruit_SSD1306 _display;
